@@ -1,4 +1,4 @@
-package com.cookware.home.MediaManagerServer.Tools;
+package com.cookware.common.Tools;
 
 import com.bitlove.fnv.FNV;
 import com.cookware.home.MediaManagerServer.DataTypes.MediaInfo;

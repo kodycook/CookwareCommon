@@ -1,4 +1,4 @@
-package com.cookware.home.MediaManagerServer.Tools;
+package com.cookware.common.Tools;
 
 import org.apache.http.NameValuePair;
 import org.apache.log4j.Logger;
