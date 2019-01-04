@@ -3,8 +3,11 @@ package com.cookware.common.Tools;
 import org.apache.http.NameValuePair;
 import org.apache.log4j.Logger;
 
-import java.io.*;
+import javax.net.ssl.*;
 import java.net.*;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 /**
@@ -13,7 +16,11 @@ import java.util.List;
  */
 public class WebTools {
     private static final Logger log = Logger.getLogger(WebTools.class);
+    private static SSLSocketFactory mySocket;
 
+    public WebTools(){
+        mySocket = (SSLSocketFactory) SSLSocketFactory.getDefault();
+    }
 
     public String extractBaseURl(String url){
 
@@ -49,7 +56,18 @@ public class WebTools {
 
         try {
             URL obj = new URL(url);
-            connection = (HttpURLConnection) obj.openConnection();
+            if(url.substring(0, 5).equals("https")) {
+                connection = (HttpsURLConnection) obj.openConnection();
+            }
+            else if (url.substring(0, 4).equals("http")){
+                connection = (HttpURLConnection) obj.openConnection();
+            }
+            else{
+                log.error("Url protocol not recognised");
+                return "";
+            }
+
+
             connection.setReadTimeout(10000);
             connection.addRequestProperty("Accept-Charset", "UTF-8");
             connection.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
@@ -77,6 +95,7 @@ public class WebTools {
                 html.append(inputLine);
             }
             response.close();
+            connection.disconnect();
 
             if(connection.getHeaderField(1).equals("nginx")){
                 log.error("Cannot access primewire - check VPN connection");
